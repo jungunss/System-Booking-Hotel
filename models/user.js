@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.Booking, { foreignKey: "user_id" });
+      // User.hasMany(models.Booking, { foreignKey: "user_id" });
     }
   }
   User.init(
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       user_id: {
         type: DataTypes.STRING,
         unique: { msg: "user_id already exists" },
-        defaultValue: () => ULID(),
+        defaultValue: () => ULID.ulid(),
         primaryKey: true,
       },
       username: {
