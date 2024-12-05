@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const ULID = require("ulid");
 module.exports = (sequelize, DataTypes) => {
   class Hotel extends Model {
     /**
@@ -16,12 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       hotel_id: {
         type: DataTypes.STRING,
-        allowNull: false,
         unique: { msg: "hotel_id already exists" },
-        validate: {
-          notNull: { msg: "hotel_id is required" },
-          notEmpty: { msg: "hotel_id is required" },
-        },
+        defaultValue: () => ULID(),
+        primaryKey: true,
       },
       name: {
         type: DataTypes.STRING,

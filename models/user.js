@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const { hash } = require("../helpers/bcrypt");
+const ULID = require("ulid");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -15,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
+      user_id: {
+        type: DataTypes.STRING,
+        unique: { msg: "user_id already exists" },
+        defaultValue: () => ULID(),
+        primaryKey: true,
+      },
       username: {
         type: DataTypes.STRING,
         allowNull: false,

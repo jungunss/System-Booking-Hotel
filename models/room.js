@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const ULID = require("ulid");
 module.exports = (sequelize, DataTypes) => {
   class Room extends Model {
     /**
@@ -14,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Room.init(
     {
+      room_id: {
+        type: DataTypes.STRING,
+        unique: { msg: "room_id already exists" },
+        defaultValue: () => ULID(),
+        primaryKey: true,
+      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,

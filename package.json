@@ -15,7 +15,8 @@
     "epxress": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1",
-    "sequelize": "^6.37.5"
+    "sequelize": "^6.37.5",
+    "ulid": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.7",
