@@ -4,69 +4,69 @@
         "name": "Hotel Bintang Lima",
         "address": "Jl. Kebon Kacang No.12, Jakarta",
         "star_class": 5,
-        "image_hotel": "https://example.com/images/hotel1.jpg"
+        "imgURL": "https://example.com/images/hotel1.jpg"
     },
     {
         "hotel_id": "01F8M3Z2Y4J4N4D5B8R5D1K5A2",
         "name": "Grand Palace Hotel",
         "address": "Jl. Sudirman No.45, Karawang",
         "star_class": 4,
-        "image_hotel": "https://example.com/images/hotel2.jpg"
+        "imgURL": "https://example.com/images/hotel2.jpg"
     },
     {
         "hotel_id": "01F8M3Z2Y4J4N4D5B8R5D1K5A3",
         "name": "Hotel Santika",
         "address": "Jl. Gatot Subroto No.78, Jakarta",
         "star_class": 3,
-        "image_hotel": "https://example.com/images/hotel3.jpg"
+        "imgURL": "https://example.com/images/hotel3.jpg"
     },
     {
         "hotel_id": "01F8M3Z2Y4J4N4D5B8R5D1K5A4",
         "name": "The Ritz-Carlton",
         "address": "Jl. H.R. Rasuna Sahotel_id No.12, Bandung",
         "star_class": 5,
-        "image_hotel": "https://example.com/images/hotel4.jpg"
+        "imgURL": "https://example.com/images/hotel4.jpg"
     },
     {
         "hotel_id": "01F8M3Z2Y4J4N4D5B8R5D1K5A5",
         "name": "Hotel Mulia",
         "address": "Jl. Asia Afrika No.8, bandung",
         "star_class": 5,
-        "image_hotel": "https://example.com/images/hotel5.jpg"
+        "imgURL": "https://example.com/images/hotel5.jpg"
     },
     {
         "hotel_id": "01F8M3Z2Y4J4N4D5B8R5D1K5A6",
         "name": "Ibis Styles Hotel",
         "address": "Jl. Cikini Raya No.10, Jakarta",
         "star_class": 3,
-        "image_hotel": "https://example.com/images/hotel6.jpg"
+        "imgURL": "https://example.com/images/hotel6.jpg"
     },
     {
         "hotel_id": "01F8M3Z2Y4J4N4D5B8R5D1K5A7",
         "name": "Novotel Jakarta",
         "address": "Jl. Suryopranoto No.15, Karawang",
         "star_class": 4,
-        "image_hotel": "https://example.com/images/hotel7.jpg"
+        "imgURL": "https://example.com/images/hotel7.jpg"
     },
     {
         "hotel_id": "01F8M3Z2Y4J4N4D5B8R5D1K5A8",
         "name": "Sheraton Grand Hotel",
         "address": "Jl. Jendral Sudirman No.20, Bandung",
         "star_class": 5,
-        "image_hotel": "https://example.com/images/hotel8.jpg"
+        "imgURL": "https://example.com/images/hotel8.jpg"
     },
     {
         "hotel_id": "01F8M3Z2Y4J4N4D5B8R5D1K5A9",
         "name": "Hotel Amaris",
         "address": "Jl. Mangga Dua Raya No.9, Karawang",
         "star_class": 2,
-        "image_hotel": "https://example.com/images/hotel9.jpg"
+        "imgURL": "https://example.com/images/hotel9.jpg"
     },
     {
         "hotel_id": "01F8M3Z2Y4J4N4D5B8R5D1K5AA",
         "name": "Pullman Hotel",
         "address": "Jl. M.H. Thamrin No.10, Jakarta",
         "star_class": 5,
-        "image_hotel": "https://example.com/images/hotel10.jpg"
+        "imgURL": "https://example.com/images/hotel10.jpg"
     }
 ]
