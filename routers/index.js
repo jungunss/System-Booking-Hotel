@@ -8,9 +8,10 @@ const { authentication } = require("../middlewares/authHandler");
 router.post("/register", authController.register);
 router.post("/login", authController.login);
 
-// Endpoint : Booking Hotel Room
+// Endpoint : Booking Systems
 router.use(authentication);
 router.post("/booking/:room_id", bookingController.order);
 router.put("/cancelBooking/:order_id", bookingController.cancelOrder);
+router.put("/refund/:order_id", bookingController.refundOrder);
 
 module.exports = router;

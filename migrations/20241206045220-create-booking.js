@@ -42,7 +42,7 @@ module.exports = {
         allowNull: false,
       },
       booking_status: {
-        type: Sequelize.ENUM("booked", "cancelled", "completed"),
+        type: Sequelize.ENUM("booked", "cancelled", "completed", "refunded"),
         defaultValue: "booked",
         allowNull: false,
       },

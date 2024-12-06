@@ -55,6 +55,29 @@ class bookingController {
       next(error);
     }
   }
+
+  static async refundOrder(req, res, next) {
+    try {
+      const { user_id } = req.loginData;
+      const { order_id } = req.params;
+      const order = await Booking.findByPk(order_id);
+      if (!order) throw { name: "NOT_FOUND" };
+      if (user_id !== order.user_id) throw { name: "UNAUTHORIZED" };
+      if (order.booking_status !== "completed") throw { name: "REFUND_DENIED" };
+
+      const currentDate = new Date();
+      const checkInDate = new Date(order.check_in_date);
+      if (currentDate >= checkInDate) throw { name: "REFUND_EXPIRED" };
+      await order.update({ booking_status: "refunded" });
+      res.status(200).json({
+        message: "Refund processed successfully",
+        order,
+      });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
 }
 
 module.exports = bookingController;

@@ -80,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       booking_status: {
-        type: DataTypes.ENUM("booked", "cancelled", "completed"),
+        type: DataTypes.ENUM("booked", "cancelled", "completed", "refunded"),
         allowNull: false,
         defaultValue: "booked",
         validate: {
