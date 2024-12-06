@@ -12,7 +12,7 @@ router.post("/login", authController.login);
 // Endpoint : Booking Systems
 router.use(authentication);
 router.post("/booking/:room_id", bookingController.order);
-router.put("/cancelBooking/:order_id", bookingController.cancelOrder);
+router.put("/cancel-booking/:order_id", bookingController.cancelOrder);
 router.put("/refund/:order_id", bookingController.refundOrder);
 
 // Endpoint : Payment Systems

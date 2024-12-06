@@ -1,13 +1,30 @@
 const { Room, Booking, User } = require("../models/index");
-const ULID = require("ulid");
 const midtransClient = require("midtrans-client");
-const axios = require("axios");
 
 class paymentController {
   static async orders(req, res, next) {
     try {
       const orders = await Booking.findAll({
-        include: [{ model: User }, { model: Room }],
+        include: [
+          {
+            model: User,
+            attributes: {
+              exclude: [
+                "password",
+                "user_id",
+                "role",
+                "createdAt",
+                "updatedAt",
+              ],
+            },
+          },
+          {
+            model: Room,
+            attributes: {
+              exclude: ["createdAt", "updatedAt"],
+            },
+          },
+        ],
         where: {
           user_id: req.loginData.user_id,
         },
@@ -22,65 +39,51 @@ class paymentController {
     }
   }
 
-  //   static async midtransToken(req, res, next) {
-  //     try {
-  //       const { RoomId } = req.params;
-  //       const { user_id } = req.loginData;
-  //       const room = await Room.findByPk(RoomId);
-  //       // Create Snap API instance
-  //       const roomPrice = room.price;
-  //       let snap = new midtransClient.Snap({
-  //         // Set to true if you want Production Environment (accept real transaction).
-  //         isProduction: false,
-  //         serverKey: "SB-Mid-server-kVatzLn6V6GC1tp4iNjiYFfT",
-  //       });
+  static async midtransCreateTransaction(req, res, next) {
+    try {
+      const { order_id } = req.params;
+      const order = await Booking.findByPk(order_id);
+      if (!order) throw { name: "NOT_FOUND" };
 
-  //       const order_id = ULID.ulid();
+      // Create Snap API instance
+      const totalPayment = order.total_price;
+      let snap = new midtransClient.Snap({
+        isProduction: false,
+        serverKey: "SB-Mid-server-kVatzLn6V6GC1tp4iNjiYFfT",
+      });
 
-  //       await Booking.create({
-  //         order_id,
-  //         user_id,
-  //         RoomId,
-  //         total_price: roomPrice,
-  //       });
+      let parameter = {
+        transaction_details: {
+          order_id: order_id,
+          gross_amount: totalPayment,
+        },
+        credit_card: {
+          secure: true,
+        },
+        customer_details: {
+          email: req.loginData.email,
+        },
+      };
 
-  //       let parameter = {
-  //         transaction_details: {
-  //           order_id: order_id,
-  //           gross_amount: roomPrice,
-  //         },
-  //         credit_card: {
-  //           secure: true,
-  //         },
-  //         customer_details: {
-  //           email: req.loginData.email,
-  //         },
-  //       };
-
-  //       const { token } = await snap.createTransaction(parameter);
-  //       res.status(200).json({
-  //         transaction_token: token,
-  //         order_id,
-  //       });
-  //     } catch (error) {
-  //       console.log(error);
-  //       next(error);
-  //     }
-  //   }
+      const { token } = await snap.createTransaction(parameter);
+      res.status(200).json({
+        transaction_token: token,
+        order_id,
+      });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
 
   //   static async updateOrderStatus(req, res, next) {
   //     try {
-  //       const { order_id } = req.body;
-  //       // cari order bedasarkan order id
-  //       const order = await Booking.findOne({
-  //         where: {
-  //           order_id,
-  //         },
-  //       });
+  //       const { order_id } = req.params;
+  //       const order = await Booking.findByPk(order_id);
+  //       if (!order) throw { name: "NOT_FOUND" };
+  //       const room_id = order.room_id;
+  //       const room = await Room.findByPk(room_id);
 
-  //       if (!order) throw { name: "NotFound" };
-
-  //       // abis itu check midtrans status ordernya
   //       const base64Key = Buffer.from(
   //         "SB-Mid-server-kVatzLn6V6GC1tp4iNjiYFfT"
   //       ).toString("base64");
@@ -100,11 +103,9 @@ class paymentController {
   //       if (data.transaction_status !== "capture") {
   //         throw { name: "BAD_REQUEST" };
   //       }
-  //       // update order statusnya jadi paid
-  //       await order.update({
-  //         statusPayment: "Paid",
-  //         paymentDate: new Date(),
-  //       });
+
+  //       await order.update({ booking_status: "completed" });
+  //       await room.update({ availability: false });
 
   //       res.status(200).json({
   //         message: "Payment success!",

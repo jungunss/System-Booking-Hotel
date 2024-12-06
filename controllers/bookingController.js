@@ -1,5 +1,6 @@
 const { Booking } = require("../models/index");
 const { Room } = require("../models/index");
+const { Op } = require("sequelize");
 
 class bookingController {
   static async order(req, res, next) {
@@ -9,18 +10,52 @@ class bookingController {
       const { checkIn, checkOut } = req.body;
       const checkInDate = new Date(checkIn);
       const checkOutDate = new Date(checkOut);
+
       if (checkInDate >= checkOutDate) {
         throw {
           status: 400,
-          message: "check_in_date must be before check_out_date",
+          message: "check_in_date must before check_out_date",
         };
       }
-      const room = await Room.findByPk(room_id);
+
+      const room = await Room.findOne({
+        where: {
+          room_id: room_id,
+          availability: true,
+        },
+      });
+
       if (!room) throw { name: "NOT_FOUND" };
+
+      const overlappingBookings = await Booking.findOne({
+        where: {
+          room_id,
+          [Op.or]: [
+            {
+              check_in_date: {
+                [Op.lte]: checkOutDate,
+              },
+              check_out_date: {
+                [Op.gte]: checkInDate,
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: Room,
+            where: { availability: false },
+          },
+        ],
+      });
+
+      if (overlappingBookings) throw { name: "ORDER_DENIED" }; //The room is already booked for the selected dates
+
       const totalDays = Math.ceil(
         (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
       );
       const totalPrice = room.price * totalDays;
+
       const order = await Booking.create({
         user_id,
         room_id,
