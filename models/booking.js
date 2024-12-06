@@ -42,33 +42,23 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       check_in_date: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull: false,
         validate: {
           notNull: { msg: "check_in_date is required" },
           notEmpty: { msg: "check_in_date is required" },
-          isDateFormat(value) {
-            const regex = /^\d{4}-\d{2}-\d{2}$/;
-            if (!regex.test(value)) {
-              throw new Error("Invalid date format, must be YYYY-MM-DD");
-            }
-          },
+          isDate: { msg: "invalid date format" },
         },
       },
       check_out_date: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull: false,
         validate: {
           notNull: { msg: "check_out_date is required" },
           notEmpty: { msg: "check_out_date is required" },
-          isDateFormat(value) {
-            const regex = /^\d{4}-\d{2}-\d{2}$/;
-            if (!regex.test(value)) {
-              throw new Error("Invalid date format, must be YYYY-MM-DD");
-            }
-          },
-          checkDates() {
-            if (new Date(this.check_out_date) <= new Date(this.check_in_date)) {
+          isDate: { msg: "invalid date format" },
+          checkDates(value) {
+            if (new Date(value) <= new Date(this.check_in_date)) {
               throw new Error(
                 "check_out_date must be later than check_in_date"
               );
