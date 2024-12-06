@@ -17,5 +17,6 @@ router.put("/refund/:order_id", bookingController.refundOrder);
 
 // Endpoint : Payment Systems
 router.get("/orders", paymentController.orders);
+router.post("/payment/:order_id", paymentController.midtransCreateTransaction);
 
 module.exports = router;
