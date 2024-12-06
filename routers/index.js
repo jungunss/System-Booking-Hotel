@@ -10,6 +10,7 @@ router.post("/login", authController.login);
 
 // Endpoint : Booking Hotel Room
 router.use(authentication);
-router.post("/order/:room_id", bookingController.orderRoom);
+router.post("/booking/:room_id", bookingController.order);
+router.put("/cancelBooking/:order_id", bookingController.cancelOrder);
 
 module.exports = router;

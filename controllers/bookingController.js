@@ -2,13 +2,13 @@ const { Booking } = require("../models/index");
 const { Room } = require("../models/index");
 
 class bookingController {
-  static async orderRoom(req, res, next) {
+  static async order(req, res, next) {
     try {
       const { user_id } = req.loginData;
       const { room_id } = req.params;
-      const { check_in_date, check_out_date } = req.body;
-      const checkInDate = new Date(check_in_date);
-      const checkOutDate = new Date(check_out_date);
+      const { checkIn, checkOut } = req.body;
+      const checkInDate = new Date(checkIn);
+      const checkOutDate = new Date(checkOut);
       if (checkInDate >= checkOutDate) {
         throw {
           status: 400,
@@ -30,6 +30,26 @@ class bookingController {
       });
 
       res.status(201).json({ message: "Booking room successfully", order });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  static async cancelOrder(req, res, next) {
+    try {
+      const { user_id } = req.loginData;
+      const { order_id } = req.params;
+      const order = await Booking.findByPk(order_id);
+      if (!order) throw { name: "NOT_FOUND" };
+      if (user_id !== order.user_id) throw { name: "UNAUTHORIZED" };
+      if (order.booking_status !== "booked") throw { name: "CANCEL_DENIED" };
+      await order.update({ booking_status: "cancelled" });
+
+      res.status(200).json({
+        message: "Booking cancelled successfully",
+        order,
+      });
     } catch (error) {
       console.error(error);
       next(error);
