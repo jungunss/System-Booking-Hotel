@@ -1,5 +1,4 @@
-const { Booking } = require("../models/index");
-const { Room } = require("../models/index");
+const { Booking, Room, Hotel } = require("../models/index");
 const { Op } = require("sequelize");
 
 class bookingController {
@@ -103,6 +102,58 @@ class bookingController {
         order,
       });
     } catch (error) {
+      next(error);
+    }
+  }
+
+  // EndPoint : PUT(refund) ============================== >>>
+  static async getAllHotels(req, res, next) {
+    try {
+      const { SEARCH, SORT, FILTER, PAGE = 1, LIMIT = 10 } = req.query;
+      const option = {
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+        include: [
+          {
+            model: Room,
+            attributes: {
+              exclude: ["hotel_id", "createdAt", "updatedAt"],
+            },
+            where: {},
+          },
+        ],
+        where: {},
+        order: [],
+        limit: parseInt(LIMIT),
+        offset: (PAGE - 1) * LIMIT,
+      };
+      if (SEARCH) {
+        option.where.name = {
+          [Op.iLike]: `%${SEARCH}%`,
+        };
+      }
+      if (SORT === "highClass") {
+        option.order.push(["star", "DESC"]);
+      } else if (SORT === "lowClass") {
+        option.order.push(["star", "ASC"]);
+      }
+      if (FILTER) {
+        option.include[0].where.type = {
+          [Op.iLike]: `%${FILTER}%`,
+        };
+      }
+      const hotels = await Hotel.findAndCountAll(option);
+      if (!hotels || hotels.rows.length === 0) throw { name: "NOT_FOUND" };
+
+      res.status(200).json({
+        totalItems: hotels.count,
+        totalPages: Math.ceil(hotels.count / LIMIT),
+        currentPage: parseInt(PAGE),
+        hotels: hotels.rows,
+      });
+    } catch (error) {
+      console.log(error);
       next(error);
     }
   }

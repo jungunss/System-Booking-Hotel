@@ -11,6 +11,7 @@ router.post("/register", authController.register);
 router.post("/login", authController.login);
 
 // Endpoint : Booking Systems
+router.get("/hotels", bookingController.getAllHotels);
 router.use(authentication);
 router.post("/booking/:room_id", bookingController.createOrder);
 router.put("/cancel-booking/:order_id", bookingController.cancelOrder);
