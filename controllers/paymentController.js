@@ -3,6 +3,7 @@ const midtransClient = require("midtrans-client");
 const axios = require("axios");
 
 class paymentController {
+  // EndPoint : GET(Read All Orders) ============================== >>>
   static async orders(req, res, next) {
     try {
       const orders = await Booking.findAll({
@@ -30,29 +31,25 @@ class paymentController {
           user_id: req.loginData.user_id,
         },
       });
-
       if (!orders) throw { name: "NOT_FOUND" };
-
       res.status(200).json(orders);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
 
+  // EndPoint : POST(Create Payment) ============================== >>>
   static async midtransCreateTransaction(req, res, next) {
     try {
       const { order_id } = req.params;
       const order = await Booking.findByPk(order_id);
       if (!order) throw { name: "NOT_FOUND" };
-
       // Create Snap API instance
       const totalPayment = order.total_price;
       let snap = new midtransClient.Snap({
         isProduction: false,
-        serverKey: "SB-Mid-server-kVatzLn6V6GC1tp4iNjiYFfT",
+        serverKey: "SB-Mid-server-yEpPlrSLUcktahuaeAEr2t09",
       });
-
       let parameter = {
         transaction_details: {
           order_id: order_id,
@@ -65,7 +62,6 @@ class paymentController {
           email: req.loginData.email,
         },
       };
-
       const { token } = await snap.createTransaction(parameter);
       res.status(200).json({
         transaction_token: token,
@@ -77,6 +73,7 @@ class paymentController {
     }
   }
 
+  // EndPoint : PUT(Update Order Payment Status) ============================== >>>
   static async updateOrderStatus(req, res, next) {
     try {
       const { order_id } = req.params;
@@ -84,9 +81,8 @@ class paymentController {
       if (!order) throw { name: "NOT_FOUND" };
       const room_id = order.room_id;
       const room = await Room.findByPk(room_id);
-
       const base64Key = Buffer.from(
-        "SB-Mid-server-kVatzLn6V6GC1tp4iNjiYFfT"
+        "SB-Mid-server-yEpPlrSLUcktahuaeAEr2t09"
       ).toString("base64");
       const { data } = await axios.get(
         `https://api.sandbox.midtrans.com/v2/${order_id}/status`,
@@ -96,15 +92,12 @@ class paymentController {
           },
         }
       );
-
       if (+data.status_code !== 200) {
         throw { name: "BAD_REQUEST" };
       }
-
       if (data.transaction_status !== "capture") {
         throw { name: "BAD_REQUEST" };
       }
-
       await order.update({ booking_status: "completed" });
       await room.update({ availability: false });
 

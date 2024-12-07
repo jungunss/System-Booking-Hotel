@@ -24,7 +24,6 @@ class authController {
       if (!newUser) throw { name: "NOT_FOUND" };
       res.status(201).json({ message: "register successfully", newUser });
     } catch (error) {
-      console.log(error); // <<<<<<< !!!!!!!!
       next(error);
     }
   }
@@ -50,7 +49,6 @@ class authController {
       const access_token = signToken(payload);
       res.status(200).json({ access_token });
     } catch (error) {
-      console.log(error); // <<<<<<< !!!!!!!!
       next(error);
     }
   }
